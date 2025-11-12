@@ -1,7 +1,6 @@
 use async_trait::async_trait;
 use roma_core::{Result, RomaError};
-use roma_config::{AgentConfig, LlmConfig};
-use serde_json::Value;
+use roma_config::AgentConfig;
 use std::sync::Arc;
 
 #[async_trait]

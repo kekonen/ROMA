@@ -1,8 +1,8 @@
 agents:
   atomizer:
     llm:
-      provider: openai
-      model: gpt-4
+      provider: anthropic
+      model: claude-sonnet-4-5-20250514
       temperature: 0.7
       max_tokens: 4096
     prediction_strategy: ChainOfThought
@@ -11,8 +11,8 @@ agents:
 
   planner:
     llm:
-      provider: openai
-      model: gpt-4
+      provider: anthropic
+      model: claude-sonnet-4-5-20250514
       temperature: 0.7
       max_tokens: 8192
     prediction_strategy: ChainOfThought
@@ -21,8 +21,8 @@ agents:
 
   executor:
     llm:
-      provider: openai
-      model: gpt-4
+      provider: anthropic
+      model: claude-sonnet-4-5-20250514
       temperature: 0.0
       max_tokens: 8192
     prediction_strategy: ReAct
@@ -34,8 +34,8 @@ agents:
 
   aggregator:
     llm:
-      provider: openai
-      model: gpt-4
+      provider: anthropic
+      model: claude-sonnet-4-5-20250514
       temperature: 0.7
       max_tokens: 8192
     prediction_strategy: ChainOfThought
@@ -44,8 +44,8 @@ agents:
 
   verifier:
     llm:
-      provider: openai
-      model: gpt-4
+      provider: anthropic
+      model: claude-sonnet-4-5-20250514
       temperature: 0.3
       max_tokens: 4096
     prediction_strategy: ChainOfThought

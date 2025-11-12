@@ -3,6 +3,7 @@ use roma_core::{Result, RomaError};
 use std::path::{Path, PathBuf};
 use tokio::fs;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use crate::Storage;
 
 #[derive(Debug, Clone)]
 pub struct FileStorage {
@@ -21,7 +22,7 @@ impl FileStorage {
         Ok(())
     }
 
-    fn resolve_path(&self, path: &str) -> PathBuf {
+    pub fn resolve_path(&self, path: &str) -> PathBuf {
         self.base_path.join(path)
     }
 

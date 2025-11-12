@@ -1,7 +1,6 @@
 use async_trait::async_trait;
 use roma_core::{AtomizationResult, NodeType, Result, RomaError};
 use roma_config::AgentConfig;
-use serde_json::json;
 
 use crate::base::{execute_completion, format_prompt_with_context, AgentBuilder, BaseAgent};
 
