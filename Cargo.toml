@@ -1,0 +1,110 @@
+[workspace]
+members = [
+    "crates/roma-core",
+    "crates/roma-agents",
+    "crates/roma-engine",
+    "crates/roma-toolkit",
+    "crates/roma-storage",
+    "crates/roma-config",
+    "crates/roma-resilience",
+    "crates/roma-observability",
+    "crates/roma-api",
+    "crates/roma-cli",
+    "crates/roma-tui",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["ROMA Contributors"]
+license = "MIT"
+repository = "https://github.com/salzubi401/ROMA-DSPy"
+
+[workspace.dependencies]
+# Rig ecosystem
+rig-core = "0.24.0"
+
+# Async runtime
+tokio = { version = "1.42", features = ["full"] }
+tokio-util = "0.7"
+async-trait = "0.1"
+futures = "0.3"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+
+# Error handling
+thiserror = "2.0"
+anyhow = "1.0"
+
+# Logging and tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+tracing-opentelemetry = "0.28"
+opentelemetry = { version = "0.27", features = ["trace", "metrics"] }
+opentelemetry-otlp = "0.27"
+opentelemetry_sdk = { version = "0.27", features = ["trace", "rt-tokio"] }
+
+# Graph operations
+petgraph = { version = "0.6", features = ["serde-1"] }
+
+# Database
+sqlx = { version = "0.8", features = ["runtime-tokio", "postgres", "macros", "uuid", "chrono", "json"] }
+deadpool-postgres = "0.14"
+
+# Storage
+parquet = "54.0"
+arrow = "54.0"
+aws-sdk-s3 = "1.69"
+aws-config = "1.5"
+
+# Configuration
+config = "0.14"
+dotenvy = "0.15"
+
+# HTTP client and server
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+axum = { version = "0.7", features = ["macros", "ws"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+# CLI
+clap = { version = "4.5", features = ["derive", "env"] }
+console = "0.15"
+dialoguer = "0.11"
+indicatif = "0.17"
+
+# TUI
+ratatui = "0.29"
+crossterm = "0.28"
+tui-tree-widget = "0.23"
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+humantime = "2.1"
+
+# UUID
+uuid = { version = "1.11", features = ["v4", "serde"] }
+
+# Data structures
+dashmap = "6.1"
+parking_lot = "0.12"
+
+# MCP and tools
+mcp-client = "0.1"
+mcp-core = "0.1"
+
+# Code execution (E2B alternative - will use docker containers)
+bollard = "0.18"
+
+# Crypto toolkits
+# We'll implement these as needed with direct HTTP calls
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

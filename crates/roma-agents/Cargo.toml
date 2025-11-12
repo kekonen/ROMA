@@ -1,0 +1,18 @@
+[package]
+name = "roma-agents"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+roma-core = { path = "../roma-core" }
+roma-config = { path = "../roma-config" }
+rig-core.workspace = true
+tokio.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+futures.workspace = true

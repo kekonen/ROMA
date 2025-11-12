@@ -1,93 +1,24 @@
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+# Rust
+/target
+**/*.rs.bk
+Cargo.lock
 
-# Virtual environments
-.venv
-.pytest_cache
-.env
-.dspy_cache
-wandb/
-
-# Logs
-logs/
-*.log
-
-# Cache and temporary files
-.cache/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
-*.dylib
-*.tex
-
-# IDE and editor files
-.vscode/
+# IDE
 .idea/
+.vscode/
 *.swp
 *.swo
-*~
+
+# Environment
+.env
+
+# Logs
+*.log
+
+# OS
 .DS_Store
+Thumbs.db
 
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb_checkpoints
-
-# ROMA-DSPy runtime data
-executions/
-.checkpoints/
-mlruns/
-outputs/
-data/
-
-# ROMA-DSPy internal documentation and reports
-docs/archive/
-reports/
-servers/
-results/
-
-# Tool storage
+# Storage
+/tmp/
 *.parquet
-*.pkl
-*.pkl.gz
-datasets/
-
-# Docker volumes (if mounted locally)
-postgres_data/
-minio_data/
-checkpoints_data/
-cache_data/
-
-# Development artifacts
-.coverage
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-htmlcov/
-.tox/
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-
-# Sensitive files
-*.key
-
-*.pem
-*.crt
-secrets/
-
-.claude
-CLAUDE.md
-.*
-mlartifacts/
-
-benchmarks/
-run

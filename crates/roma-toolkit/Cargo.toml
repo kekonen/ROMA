@@ -1,0 +1,27 @@
+[package]
+name = "roma-toolkit"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+roma-core = { path = "../roma-core" }
+roma-storage = { path = "../roma-storage" }
+rig-core.workspace = true
+mcp-client = { workspace = true, optional = true }
+mcp-core = { workspace = true, optional = true }
+tokio.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+bollard = { workspace = true, optional = true }
+reqwest.workspace = true
+tracing.workspace = true
+uuid.workspace = true
+
+[features]
+default = ["docker"]
+docker = ["dep:bollard"]
+mcp = ["dep:mcp-client", "dep:mcp-core"]

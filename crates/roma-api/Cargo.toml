@@ -1,0 +1,21 @@
+[package]
+name = "roma-api"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+roma-core = { path = "../roma-core" }
+roma-config = { path = "../roma-config" }
+roma-engine = { path = "../roma-engine" }
+roma-storage = { path = "../roma-storage" }
+axum.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+tracing.workspace = true
+uuid.workspace = true
+dashmap.workspace = true

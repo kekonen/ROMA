@@ -1,0 +1,26 @@
+[package]
+name = "roma-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "roma"
+path = "src/main.rs"
+
+[dependencies]
+roma-core = { path = "../roma-core" }
+roma-config = { path = "../roma-config" }
+roma-engine = { path = "../roma-engine" }
+roma-storage = { path = "../roma-storage" }
+roma-observability = { path = "../roma-observability" }
+roma-api = { path = "../roma-api" }
+tokio.workspace = true
+clap.workspace = true
+console.workspace = true
+dialoguer.workspace = true
+indicatif.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
