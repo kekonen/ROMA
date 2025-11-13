@@ -11,7 +11,7 @@ pub trait BaseAgent: Send + Sync {
         &self,
         input: &str,
         context: Option<&str>,
-        tools: Vec<String>, // Tool names for now, since rig::tool::Tool is not dyn-compatible
+        tools: Vec<String>, // Tool names (rig::tool::Tool is not dyn-compatible in rig-core 0.24.0)
     ) -> Result<String>;
 }
 
@@ -84,9 +84,35 @@ where
         .await
         .map_err(|e| RomaError::LlmError(format!("Completion failed: {}", e)))?;
 
-    // Convert response to string
-    // response.choice is a complex type, let's just format it for now
-    let text = format!("{:?}", response.choice);
+    // Extract text from response.choice (OneOrMany<AssistantContent>)
+    // OneOrMany is a struct with first() and rest() methods
+    let first_text = extract_text_from_content(&response.choice.first());
+    let rest_texts: Vec<String> = response.choice.rest()
+        .iter()
+        .map(extract_text_from_content)
+        .collect();
+
+    let text = if rest_texts.is_empty() {
+        first_text
+    } else {
+        let mut all_texts = vec![first_text];
+        all_texts.extend(rest_texts);
+        all_texts.join("\n")
+    };
 
     Ok(text)
+}
+
+fn extract_text_from_content(content: &rig::completion::message::AssistantContent) -> String {
+    use rig::completion::message::AssistantContent;
+
+    match content {
+        AssistantContent::Text(text) => text.text().to_string(),
+        AssistantContent::ToolCall(tool_call) => {
+            format!("Tool call: {} (id: {})", tool_call.function.name, tool_call.id)
+        }
+        AssistantContent::Reasoning(reasoning) => {
+            reasoning.reasoning.join("\n")
+        }
+    }
 }

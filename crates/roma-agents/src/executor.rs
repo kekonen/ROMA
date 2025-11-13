@@ -34,23 +34,36 @@ Be thorough and precise. If a task cannot be completed with available tools, exp
         &self,
         goal: &str,
         context: Option<&str>,
-        _tool_names: Vec<String>, // TODO: Implement custom tool integration
+        tool_names: Vec<String>,
     ) -> Result<ExecutionResult> {
-        let prompt = format_prompt_with_context(
-            &format!("Execute this task:\n\n{}", goal),
-            context,
-        );
+        let prompt = if !tool_names.is_empty() {
+            // Include available tools in the prompt
+            let tools_str = tool_names.join(", ");
+            format_prompt_with_context(
+                &format!("Execute this task using available tools ({}):\n\n{}", tools_str, goal),
+                context,
+            )
+        } else {
+            format_prompt_with_context(
+                &format!("Execute this task:\n\n{}", goal),
+                context,
+            )
+        };
 
         let provider = &self.builder.config().llm.provider;
         let response = match provider.as_str() {
             "openai" => {
                 let model = self.builder.build_openai_agent().await?;
-                // Use the execute_completion function since rig-core 0.24.0 API has changed
+                // Note: Tool calling would require rig's agent.with_tools() API
+                // which requires Tool trait objects. Since Tool is not dyn-compatible in rig-core 0.24.0,
+                // we inform the model about tools via the prompt instead.
                 crate::base::execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
             }
             "anthropic" => {
                 let model = self.builder.build_anthropic_agent().await?;
-                // Use the execute_completion function since rig-core 0.24.0 API has changed
+                // Note: Tool calling would require rig's agent.with_tools() API
+                // which requires Tool trait objects. Since Tool is not dyn-compatible in rig-core 0.24.0,
+                // we inform the model about tools via the prompt instead.
                 crate::base::execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
             }
             _ => {
