@@ -2,11 +2,9 @@
 // To enable MCP support, implement a custom MCP client integration
 
 use async_trait::async_trait;
-use rig::tool::Tool;
 use roma_core::Result;
-use std::sync::Arc;
 
-use crate::base::Toolkit;
+use crate::base::{DynTool, Toolkit};
 
 pub struct McpToolkit;
 
@@ -22,7 +20,7 @@ impl Toolkit for McpToolkit {
         "mcp"
     }
 
-    fn tools(&self) -> Vec<Arc<dyn Tool>> {
+    fn tools(&self) -> Vec<DynTool> {
         // MCP tools would be dynamically loaded from MCP servers
         Vec::new()
     }

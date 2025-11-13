@@ -6,7 +6,7 @@ pub mod postgres_storage;
 #[cfg(feature = "parquet-storage")]
 pub mod parquet_storage;
 
-pub use file_storage::FileStorage;
+pub use file_storage::{FileStorage, ExecutionStorage};
 
 #[cfg(feature = "postgres")]
 pub use postgres_storage::PostgresStorage;

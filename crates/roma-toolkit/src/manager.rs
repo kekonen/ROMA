@@ -3,7 +3,7 @@ use roma_storage::ExecutionStorage;
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::base::Toolkit;
+use crate::base::{DynTool, Toolkit};
 use crate::{ArtifactToolkit, CalculatorToolkit, FileToolkit};
 
 #[cfg(feature = "docker")]
@@ -54,7 +54,7 @@ impl ToolkitManager {
         Ok(())
     }
 
-    pub fn get_all_tools(&self) -> Vec<Arc<dyn rig::tool::Tool>> {
+    pub fn get_all_tools(&self) -> Vec<DynTool> {
         let mut all_tools = Vec::new();
         for toolkit in self.toolkits.values() {
             all_tools.extend(toolkit.tools());
@@ -62,7 +62,7 @@ impl ToolkitManager {
         all_tools
     }
 
-    pub fn get_tools_by_names(&self, names: &[String]) -> Vec<Arc<dyn rig::tool::Tool>> {
+    pub fn get_tools_by_names(&self, names: &[String]) -> Vec<DynTool> {
         let mut tools = Vec::new();
         for name in names {
             if let Some(toolkit) = self.toolkits.get(name) {

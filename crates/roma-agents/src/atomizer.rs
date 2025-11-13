@@ -121,7 +121,7 @@ impl BaseAgent for Atomizer {
         &self,
         input: &str,
         context: Option<&str>,
-        _tools: Vec<std::sync::Arc<dyn rig::tool::Tool>>,
+        _tools: Vec<String>,
     ) -> Result<String> {
         self.execute(input, context).await
     }

@@ -5,7 +5,7 @@ use roma_storage::ExecutionStorage;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
-use crate::base::{build_error_response, build_success_response, Toolkit};
+use crate::base::{build_error_response, build_success_response, DynTool, Toolkit};
 
 pub struct FileToolkit {
     storage: Arc<ExecutionStorage>,
@@ -17,17 +17,16 @@ impl FileToolkit {
     }
 }
 
-#[async_trait]
 impl Toolkit for FileToolkit {
     fn name(&self) -> &str {
         "file"
     }
 
-    fn tools(&self) -> Vec<Arc<dyn Tool>> {
+    fn tools(&self) -> Vec<DynTool> {
         vec![
-            Arc::new(ReadFileTool::new(self.storage.clone())),
-            Arc::new(WriteFileTool::new(self.storage.clone())),
-            Arc::new(ListFilesTool::new(self.storage.clone())),
+            DynTool::new(ReadFileTool::new(self.storage.clone())),
+            DynTool::new(WriteFileTool::new(self.storage.clone())),
+            DynTool::new(ListFilesTool::new(self.storage.clone())),
         ]
     }
 }
@@ -48,16 +47,15 @@ struct ReadFileArgs {
     filename: String,
 }
 
-#[async_trait]
 impl Tool for ReadFileTool {
     const NAME: &'static str = "read_file";
 
-    type Error = String;
+    type Error = crate::base::ToolError;
     type Args = ReadFileArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Read the contents of a file from the execution storage".to_string(),
             parameters: serde_json::json!({
@@ -98,16 +96,15 @@ struct WriteFileArgs {
     content: String,
 }
 
-#[async_trait]
 impl Tool for WriteFileTool {
     const NAME: &'static str = "write_file";
 
-    type Error = String;
+    type Error = crate::base::ToolError;
     type Args = WriteFileArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Write content to a file in the execution storage".to_string(),
             parameters: serde_json::json!({
@@ -151,16 +148,15 @@ impl ListFilesTool {
 #[derive(Deserialize, Serialize)]
 struct ListFilesArgs {}
 
-#[async_trait]
 impl Tool for ListFilesTool {
     const NAME: &'static str = "list_files";
 
-    type Error = String;
+    type Error = crate::base::ToolError;
     type Args = ListFilesArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "List all files in the execution storage".to_string(),
             parameters: serde_json::json!({

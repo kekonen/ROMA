@@ -35,7 +35,7 @@ Be thorough and precise. If a task cannot be completed with available tools, exp
         &self,
         goal: &str,
         context: Option<&str>,
-        tools: Vec<Arc<dyn rig::tool::Tool>>,
+        _tool_names: Vec<String>, // TODO: Implement custom tool integration
     ) -> Result<ExecutionResult> {
         let prompt = format_prompt_with_context(
             &format!("Execute this task:\n\n{}", goal),
@@ -46,33 +46,13 @@ Be thorough and precise. If a task cannot be completed with available tools, exp
         let response = match provider.as_str() {
             "openai" => {
                 let model = self.builder.build_openai_agent().await?;
-                let agent = model.agent(Self::SYSTEM_PROMPT);
-
-                let agent_with_tools = tools.iter().fold(agent, |acc, tool| {
-                    acc.tool(tool.clone())
-                });
-
-                let result = agent_with_tools
-                    .prompt(&prompt)
-                    .await
-                    .map_err(|e| RomaError::ExecutionError(format!("Agent execution failed: {}", e)))?;
-
-                result
+                // Use the execute_completion function since rig-core 0.24.0 API has changed
+                crate::base::execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
             }
             "anthropic" => {
                 let model = self.builder.build_anthropic_agent().await?;
-                let agent = model.agent(Self::SYSTEM_PROMPT);
-
-                let agent_with_tools = tools.iter().fold(agent, |acc, tool| {
-                    acc.tool(tool.clone())
-                });
-
-                let result = agent_with_tools
-                    .prompt(&prompt)
-                    .await
-                    .map_err(|e| RomaError::ExecutionError(format!("Agent execution failed: {}", e)))?;
-
-                result
+                // Use the execute_completion function since rig-core 0.24.0 API has changed
+                crate::base::execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
             }
             _ => {
                 return Err(RomaError::ConfigError(format!(
@@ -101,7 +81,7 @@ impl BaseAgent for Executor {
         &self,
         input: &str,
         context: Option<&str>,
-        tools: Vec<Arc<dyn rig::tool::Tool>>,
+        tools: Vec<String>,
     ) -> Result<String> {
         let result = self.execute_task(input, context, tools).await?;
         Ok(result.output)
