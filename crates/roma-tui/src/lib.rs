@@ -11,7 +11,7 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem, Paragraph},
     Frame, Terminal,
 };
-use roma_core::{TaskNode, TaskStatus};
+use roma_core::TaskStatus;
 use roma_engine::TaskDag;
 use std::io;
 

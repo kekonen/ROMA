@@ -1,5 +1,4 @@
 use roma_core::{Result, RomaError};
-use std::sync::Arc;
 
 pub struct ParquetWriter {
     base_path: std::path::PathBuf,

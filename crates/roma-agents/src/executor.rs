@@ -1,7 +1,6 @@
 use async_trait::async_trait;
 use roma_core::{ExecutionResult, Result, RomaError};
 use roma_config::AgentConfig;
-use std::sync::Arc;
 
 use crate::base::{format_prompt_with_context, AgentBuilder, BaseAgent};
 

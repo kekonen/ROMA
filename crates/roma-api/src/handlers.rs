@@ -4,10 +4,8 @@ use axum::{
     Json,
     response::IntoResponse,
 };
-use roma_core::TaskNode;
 use roma_engine::RecursiveSolver;
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 use tracing::{error, info};
 
 use crate::state::AppState;

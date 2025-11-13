@@ -1,8 +1,7 @@
 use roma_core::{Result, RomaError, TaskNode, TaskStatus};
-use std::collections::BinaryHeap;
 use std::cmp::Ordering;
 use std::sync::Arc;
-use tokio::sync::{Semaphore, mpsc};
+use tokio::sync::Semaphore;
 use tokio::task::JoinHandle;
 use futures::future::join_all;
 use dashmap::DashMap;

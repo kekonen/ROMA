@@ -1,5 +1,4 @@
 use roma_core::{Result, RomaError};
-use roma_storage::FileStorage;
 use serde_json::Value;
 use std::path::PathBuf;
 use tokio::fs;

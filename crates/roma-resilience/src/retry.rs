@@ -1,4 +1,3 @@
-use roma_config::RetryStrategy;
 use std::time::Duration;
 use tokio::time::sleep;
 use tracing::warn;

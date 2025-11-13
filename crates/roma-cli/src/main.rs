@@ -6,7 +6,6 @@ use roma_engine::RecursiveSolver;
 use roma_observability;
 use roma_storage::FileStorage;
 use std::path::PathBuf;
-use tracing::info;
 
 #[derive(Parser)]
 #[command(name = "roma")]

@@ -1,6 +1,5 @@
-use async_trait::async_trait;
 use rig::tool::Tool;
-use roma_core::{Artifact, ArtifactType, Result};
+use roma_core::{Artifact, ArtifactType};
 use roma_storage::ExecutionStorage;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;

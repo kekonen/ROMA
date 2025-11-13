@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use roma_core::{Result, RomaError};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use tokio::fs;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use crate::Storage;

@@ -43,6 +43,7 @@ impl AgentFactory {
     }
 }
 
+#[derive(Clone)]
 pub struct Agents {
     pub atomizer: Arc<Atomizer>,
     pub planner: Arc<Planner>,
