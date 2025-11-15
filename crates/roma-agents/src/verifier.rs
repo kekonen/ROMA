@@ -111,7 +111,7 @@ Be rigorous but fair. Only mark as true if the output genuinely satisfies the go
 
 #[async_trait]
 impl BaseAgent for Verifier {
-    async fn execute(&self, input: &str, context: Option<&str>) -> Result<String> {
+    async fn execute(&self, _input: &str, _context: Option<&str>) -> Result<String> {
         Err(RomaError::ExecutionError(
             "Verifier requires goal and candidate output".to_string(),
         ))

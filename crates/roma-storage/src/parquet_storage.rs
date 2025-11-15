@@ -13,7 +13,7 @@ impl ParquetWriter {
         &self,
         category: &str,
         filename: &str,
-        data: &serde_json::Value,
+        _data: &serde_json::Value,
     ) -> Result<String> {
         let output_path = self.base_path.join(category).join(format!("{}.parquet", filename));
 

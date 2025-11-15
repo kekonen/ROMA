@@ -280,7 +280,7 @@ impl RecursiveSolver {
         &self,
         mut task: TaskNode,
         context: &SharedContext,
-        storage: &ExecutionStorage,
+        _storage: &ExecutionStorage,
     ) -> Result<TaskNode> {
         debug!("Executing atomic task {}", task.task_id);
 
@@ -313,10 +313,10 @@ impl RecursiveSolver {
         &self,
         task: TaskNode,
         context: &SharedContext,
-        storage: &ExecutionStorage,
+        _storage: &ExecutionStorage,
     ) -> Result<TaskNode> {
         warn!("Force executing task {} due to max depth", task.task_id);
-        self.execute_atomic_task(task, context, storage).await
+        self.execute_atomic_task(task, context, _storage).await
     }
 }
 
@@ -324,7 +324,7 @@ impl RecursiveSolver {
 async fn execute_atomic_task_impl(
     task: &TaskNode,
     context: &SharedContext,
-    storage: &ExecutionStorage,
+    _storage: &ExecutionStorage,
     agents: &Agents,
 ) -> Result<TaskNode> {
     let mut task = task.clone();

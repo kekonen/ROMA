@@ -124,7 +124,7 @@ Respond in the following JSON format:
 
 #[async_trait]
 impl BaseAgent for Aggregator {
-    async fn execute(&self, input: &str, context: Option<&str>) -> Result<String> {
+    async fn execute(&self, _input: &str, _context: Option<&str>) -> Result<String> {
         Err(RomaError::ExecutionError(
             "Aggregator requires subtask results".to_string(),
         ))

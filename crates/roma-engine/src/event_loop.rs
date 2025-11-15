@@ -7,6 +7,7 @@ use futures::future::join_all;
 use dashmap::DashMap;
 
 #[derive(Clone)]
+#[allow(dead_code)]
 struct PrioritizedTask {
     task: TaskNode,
     priority: usize,
