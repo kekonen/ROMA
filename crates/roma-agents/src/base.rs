@@ -69,6 +69,7 @@ pub async fn execute_completion<M>(
     model: &M,
     input: &str,
     system_prompt: Option<&str>,
+    max_tokens: Option<u32>,
 ) -> Result<String>
 where
     M: rig::completion::CompletionModel,
@@ -77,6 +78,10 @@ where
 
     if let Some(prompt) = system_prompt {
         request = request.preamble(prompt.to_string());
+    }
+
+    if let Some(tokens) = max_tokens {
+        request = request.max_tokens(tokens as u64);
     }
 
     let response = request

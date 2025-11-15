@@ -51,20 +51,21 @@ Be thorough and precise. If a task cannot be completed with available tools, exp
         };
 
         let provider = &self.builder.config().llm.provider;
+        let max_tokens = Some(self.builder.config().llm.max_tokens);
         let response = match provider.as_str() {
             "openai" => {
                 let model = self.builder.build_openai_agent().await?;
                 // Note: Tool calling would require rig's agent.with_tools() API
                 // which requires Tool trait objects. Since Tool is not dyn-compatible in rig-core 0.24.0,
                 // we inform the model about tools via the prompt instead.
-                crate::base::execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
+                crate::base::execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT), max_tokens).await?
             }
             "anthropic" => {
                 let model = self.builder.build_anthropic_agent().await?;
                 // Note: Tool calling would require rig's agent.with_tools() API
                 // which requires Tool trait objects. Since Tool is not dyn-compatible in rig-core 0.24.0,
                 // we inform the model about tools via the prompt instead.
-                crate::base::execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
+                crate::base::execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT), max_tokens).await?
             }
             _ => {
                 return Err(RomaError::ConfigError(format!(

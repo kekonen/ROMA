@@ -43,14 +43,15 @@ Be conservative: when in doubt, mark as non-atomic to ensure proper decompositio
         );
 
         let provider = &self.builder.config().llm.provider;
+        let max_tokens = Some(self.builder.config().llm.max_tokens);
         let response = match provider.as_str() {
             "openai" => {
                 let model = self.builder.build_openai_agent().await?;
-                execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
+                execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT), max_tokens).await?
             }
             "anthropic" => {
                 let model = self.builder.build_anthropic_agent().await?;
-                execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
+                execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT), max_tokens).await?
             }
             _ => {
                 return Err(RomaError::ConfigError(format!(
