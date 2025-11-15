@@ -59,6 +59,7 @@ enum Commands {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    dotenv::dotenv().ok();
     let cli = Cli::parse();
 
     let config = if let Some(config_path) = cli.config {
