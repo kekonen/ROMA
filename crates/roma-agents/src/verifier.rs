@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use roma_core::{Result, RomaError, VerificationResult};
 use roma_config::AgentConfig;
 
-use crate::base::{execute_completion, format_prompt_with_context, AgentBuilder, BaseAgent};
+use crate::base::{execute_completion_placeholder, format_prompt_with_context, AgentBuilder, BaseAgent};
 
 pub struct Verifier {
     builder: AgentBuilder,
@@ -46,23 +46,7 @@ Be rigorous but fair. Only mark as true if the output genuinely satisfies the go
             context,
         );
 
-        let provider = &self.builder.config().llm.provider;
-        let response = match provider.as_str() {
-            "openai" => {
-                let model = self.builder.build_openai_agent().await?;
-                execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
-            }
-            "anthropic" => {
-                let model = self.builder.build_anthropic_agent().await?;
-                execute_completion(&model, &prompt, Some(Self::SYSTEM_PROMPT)).await?
-            }
-            _ => {
-                return Err(RomaError::ConfigError(format!(
-                    "Unsupported provider: {}",
-                    provider
-                )))
-            }
-        };
+        let response = execute_completion_placeholder(&prompt, Some(Self::SYSTEM_PROMPT)).await?;
 
         self.parse_response(&response)
     }
@@ -110,18 +94,9 @@ Be rigorous but fair. Only mark as true if the output genuinely satisfies the go
 
 #[async_trait]
 impl BaseAgent for Verifier {
-    async fn execute(&self, input: &str, context: Option<&str>) -> Result<String> {
+    async fn execute(&self, _input: &str, _context: Option<&str>) -> Result<String> {
         Err(RomaError::ExecutionError(
             "Verifier requires goal and candidate output".to_string(),
         ))
-    }
-
-    async fn execute_with_tools(
-        &self,
-        input: &str,
-        context: Option<&str>,
-        _tools: Vec<std::sync::Arc<dyn rig::tool::Tool>>,
-    ) -> Result<String> {
-        self.execute(input, context).await
     }
 }

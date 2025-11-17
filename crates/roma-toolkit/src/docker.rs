@@ -4,12 +4,19 @@ use bollard::container::{Config, CreateContainerOptions, StartContainerOptions, 
 use bollard::exec::{CreateExecOptions, StartExecResults};
 use bollard::image::CreateImageOptions;
 use futures::StreamExt;
+use futures::TryStreamExt;
 use rig::tool::Tool;
 use roma_core::Result;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 use crate::base::{build_error_response, build_success_response, Toolkit};
+
+#[derive(Debug, thiserror::Error)]
+pub enum ToolError {
+    #[error("{0}")]
+    Error(String),
+}
 
 pub struct DockerToolkit {
     docker: Docker,
@@ -29,13 +36,6 @@ impl Toolkit for DockerToolkit {
     fn name(&self) -> &str {
         "docker"
     }
-
-    fn tools(&self) -> Vec<Arc<dyn Tool>> {
-        vec![
-            Arc::new(RunPythonCodeTool::new(self.docker.clone())),
-            Arc::new(RunCommandTool::new(self.docker.clone())),
-        ]
-    }
 }
 
 #[derive(Clone)]
@@ -54,16 +54,15 @@ struct RunPythonCodeArgs {
     code: String,
 }
 
-#[async_trait]
 impl Tool for RunPythonCodeTool {
     const NAME: &'static str = "run_python_code";
 
-    type Error = String;
+    type Error = ToolError;
     type Args = RunPythonCodeArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Execute Python code in a sandboxed Docker container".to_string(),
             parameters: serde_json::json!({
@@ -94,8 +93,8 @@ impl Tool for RunPythonCodeTool {
             .docker
             .create_container(
                 Some(CreateContainerOptions {
-                    name: &container_name,
-                    ..Default::default()
+                    name: container_name.clone(),
+                    platform: None,
                 }),
                 config,
             )
@@ -156,16 +155,15 @@ struct RunCommandArgs {
     image: Option<String>,
 }
 
-#[async_trait]
 impl Tool for RunCommandTool {
     const NAME: &'static str = "run_command";
 
-    type Error = String;
+    type Error = ToolError;
     type Args = RunCommandArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Execute a shell command in a Docker container".to_string(),
             parameters: serde_json::json!({
@@ -201,8 +199,8 @@ impl Tool for RunCommandTool {
             .docker
             .create_container(
                 Some(CreateContainerOptions {
-                    name: &container_name,
-                    ..Default::default()
+                    name: container_name.clone(),
+                    platform: None,
                 }),
                 config,
             )

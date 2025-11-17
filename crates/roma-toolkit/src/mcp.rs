@@ -22,11 +22,6 @@ impl Toolkit for McpToolkit {
         "mcp"
     }
 
-    fn tools(&self) -> Vec<Arc<dyn Tool>> {
-        // MCP tools would be dynamically loaded from MCP servers
-        Vec::new()
-    }
-
     async fn setup(&mut self) -> Result<()> {
         Ok(())
     }

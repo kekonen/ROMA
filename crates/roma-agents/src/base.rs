@@ -6,13 +6,6 @@ use std::sync::Arc;
 #[async_trait]
 pub trait BaseAgent: Send + Sync {
     async fn execute(&self, input: &str, context: Option<&str>) -> Result<String>;
-
-    async fn execute_with_tools(
-        &self,
-        input: &str,
-        context: Option<&str>,
-        tools: Vec<Arc<dyn rig::tool::Tool>>,
-    ) -> Result<String>;
 }
 
 pub struct AgentBuilder {
@@ -24,38 +17,18 @@ impl AgentBuilder {
         Self { config }
     }
 
-    pub async fn build_openai_agent(
-        &self,
-    ) -> Result<rig::providers::openai::CompletionModel> {
+    pub async fn build_openai_client(&self) -> Result<rig::providers::openai::Client> {
         let api_key = std::env::var("OPENAI_API_KEY")
             .map_err(|_| RomaError::ConfigError("OPENAI_API_KEY not set".to_string()))?;
 
-        let client = rig::providers::openai::Client::new(&api_key);
-
-        let model = client
-            .completion_model(&self.config.llm.model)
-            .temperature(self.config.llm.temperature as f64)
-            .max_tokens(self.config.llm.max_tokens as usize)
-            .build();
-
-        Ok(model)
+        Ok(rig::providers::openai::Client::new(&api_key))
     }
 
-    pub async fn build_anthropic_agent(
-        &self,
-    ) -> Result<rig::providers::anthropic::CompletionModel> {
+    pub async fn build_anthropic_client(&self) -> Result<rig::providers::anthropic::Client> {
         let api_key = std::env::var("ANTHROPIC_API_KEY")
             .map_err(|_| RomaError::ConfigError("ANTHROPIC_API_KEY not set".to_string()))?;
 
-        let client = rig::providers::anthropic::Client::new(&api_key);
-
-        let model = client
-            .completion_model(&self.config.llm.model)
-            .temperature(self.config.llm.temperature as f64)
-            .max_tokens(self.config.llm.max_tokens as usize)
-            .build();
-
-        Ok(model)
+        Ok(rig::providers::anthropic::Client::new(&api_key))
     }
 
     pub fn config(&self) -> &AgentConfig {
@@ -71,24 +44,11 @@ pub fn format_prompt_with_context(input: &str, context: Option<&str>) -> String 
     }
 }
 
-pub async fn execute_completion<M>(
-    model: &M,
-    input: &str,
-    system_prompt: Option<&str>,
-) -> Result<String>
-where
-    M: rig::completion::CompletionModel,
-{
-    let mut request = model.completion_request(input);
-
-    if let Some(prompt) = system_prompt {
-        request = request.preamble(prompt);
-    }
-
-    let response = request
-        .send()
-        .await
-        .map_err(|e| RomaError::LlmError(format!("Completion failed: {}", e)))?;
-
-    Ok(response.choice)
+// Placeholder for completion execution - needs to be implemented with rig-core 0.24.0 API
+pub async fn execute_completion_placeholder(
+    _input: &str,
+    _system_prompt: Option<&str>,
+) -> Result<String> {
+    // TODO: Implement with rig-core 0.24.0 API
+    Ok("Placeholder response - rig-core 0.24.0 API integration needed".to_string())
 }

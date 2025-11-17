@@ -1,12 +1,9 @@
 use async_trait::async_trait;
 use roma_core::{Result, ToolInvocation};
-use std::sync::Arc;
 
 #[async_trait]
 pub trait Toolkit: Send + Sync {
     fn name(&self) -> &str;
-
-    fn tools(&self) -> Vec<Arc<dyn rig::tool::Tool>>;
 
     async fn setup(&mut self) -> Result<()> {
         Ok(())
@@ -16,7 +13,8 @@ pub trait Toolkit: Send + Sync {
         Ok(())
     }
 
-    fn track_invocation(&self, invocation: ToolInvocation) {
+    fn track_invocation(&self, _invocation: ToolInvocation) {
+        // Default implementation does nothing
     }
 }
 

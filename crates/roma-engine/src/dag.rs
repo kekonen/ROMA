@@ -49,25 +49,21 @@ impl TaskDag {
     pub fn add_dependency(&self, from_task_id: &str, to_task_id: &str) -> Result<()> {
         let mut inner = self.inner.write();
 
-        let from_index = inner
+        let from_index = *inner
             .task_indices
             .get(from_task_id)
             .ok_or_else(|| RomaError::TaskNotFound(from_task_id.to_string()))?;
 
-        let to_index = inner
+        let to_index = *inner
             .task_indices
             .get(to_task_id)
             .ok_or_else(|| RomaError::TaskNotFound(to_task_id.to_string()))?;
 
-        inner.graph.add_edge(*from_index, *to_index, ());
+        inner.graph.add_edge(from_index, to_index, ());
 
         if algo::is_cyclic_directed(&inner.graph) {
-            inner.graph.remove_edge(
-                inner
-                    .graph
-                    .find_edge(*from_index, *to_index)
-                    .unwrap(),
-            );
+            let edge = inner.graph.find_edge(from_index, to_index).unwrap();
+            inner.graph.remove_edge(edge);
             return Err(RomaError::CycleDetected);
         }
 
@@ -89,12 +85,12 @@ impl TaskDag {
         F: FnOnce(&mut TaskNode),
     {
         let mut inner = self.inner.write();
-        let index = inner
+        let index = *inner
             .task_indices
             .get(task_id)
             .ok_or_else(|| RomaError::TaskNotFound(task_id.to_string()))?;
 
-        if let Some(node) = inner.graph.node_weight_mut(*index) {
+        if let Some(node) = inner.graph.node_weight_mut(index) {
             update_fn(node);
         }
 

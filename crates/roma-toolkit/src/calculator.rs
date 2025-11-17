@@ -6,6 +6,12 @@ use std::sync::Arc;
 
 use crate::base::{build_error_response, build_success_response, Toolkit};
 
+#[derive(Debug, thiserror::Error)]
+pub enum ToolError {
+    #[error("{0}")]
+    Error(String),
+}
+
 pub struct CalculatorToolkit;
 
 impl CalculatorToolkit {
@@ -19,15 +25,6 @@ impl Toolkit for CalculatorToolkit {
     fn name(&self) -> &str {
         "calculator"
     }
-
-    fn tools(&self) -> Vec<Arc<dyn Tool>> {
-        vec![
-            Arc::new(AddTool),
-            Arc::new(SubtractTool),
-            Arc::new(MultiplyTool),
-            Arc::new(DivideTool),
-        ]
-    }
 }
 
 #[derive(Clone)]
@@ -39,16 +36,15 @@ struct MathArgs {
     y: f64,
 }
 
-#[async_trait]
 impl Tool for AddTool {
     const NAME: &'static str = "add";
 
-    type Error = String;
+    type Error = ToolError;
     type Args = MathArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Add two numbers together".to_string(),
             parameters: serde_json::json!({
@@ -71,16 +67,15 @@ impl Tool for AddTool {
 #[derive(Clone)]
 struct SubtractTool;
 
-#[async_trait]
 impl Tool for SubtractTool {
     const NAME: &'static str = "subtract";
 
-    type Error = String;
+    type Error = ToolError;
     type Args = MathArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Subtract y from x".to_string(),
             parameters: serde_json::json!({
@@ -103,16 +98,15 @@ impl Tool for SubtractTool {
 #[derive(Clone)]
 struct MultiplyTool;
 
-#[async_trait]
 impl Tool for MultiplyTool {
     const NAME: &'static str = "multiply";
 
-    type Error = String;
+    type Error = ToolError;
     type Args = MathArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Multiply two numbers together".to_string(),
             parameters: serde_json::json!({
@@ -135,16 +129,15 @@ impl Tool for MultiplyTool {
 #[derive(Clone)]
 struct DivideTool;
 
-#[async_trait]
 impl Tool for DivideTool {
     const NAME: &'static str = "divide";
 
-    type Error = String;
+    type Error = ToolError;
     type Args = MathArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Divide x by y".to_string(),
             parameters: serde_json::json!({

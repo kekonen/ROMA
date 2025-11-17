@@ -12,4 +12,4 @@ pub use planner::Planner;
 pub use executor::Executor;
 pub use aggregator::Aggregator;
 pub use verifier::Verifier;
-pub use factory::AgentFactory;
+pub use factory::{AgentFactory, Agents};

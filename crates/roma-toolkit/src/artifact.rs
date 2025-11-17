@@ -7,6 +7,12 @@ use std::sync::Arc;
 
 use crate::base::{build_error_response, build_success_response, Toolkit};
 
+#[derive(Debug, thiserror::Error)]
+pub enum ToolError {
+    #[error("{0}")]
+    Error(String),
+}
+
 pub struct ArtifactToolkit {
     storage: Arc<ExecutionStorage>,
 }
@@ -21,13 +27,6 @@ impl ArtifactToolkit {
 impl Toolkit for ArtifactToolkit {
     fn name(&self) -> &str {
         "artifact"
-    }
-
-    fn tools(&self) -> Vec<Arc<dyn Tool>> {
-        vec![
-            Arc::new(CreateArtifactTool::new(self.storage.clone())),
-            Arc::new(GetArtifactTool::new(self.storage.clone())),
-        ]
     }
 }
 
@@ -49,16 +48,15 @@ struct CreateArtifactArgs {
     content: String,
 }
 
-#[async_trait]
 impl Tool for CreateArtifactTool {
     const NAME: &'static str = "create_artifact";
 
-    type Error = String;
+    type Error = ToolError;
     type Args = CreateArtifactArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Create and store an artifact (code, document, data, image, or other)".to_string(),
             parameters: serde_json::json!({
@@ -124,16 +122,15 @@ struct GetArtifactArgs {
     name: String,
 }
 
-#[async_trait]
 impl Tool for GetArtifactTool {
     const NAME: &'static str = "get_artifact";
 
-    type Error = String;
+    type Error = ToolError;
     type Args = GetArtifactArgs;
     type Output = String;
 
-    async fn definition(&self, _prompt: String) -> rig::tool::ToolDefinition {
-        rig::tool::ToolDefinition {
+    async fn definition(&self, _prompt: String) -> rig::completion::ToolDefinition {
+        rig::completion::ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Retrieve a previously created artifact by name".to_string(),
             parameters: serde_json::json!({

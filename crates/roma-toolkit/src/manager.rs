@@ -54,26 +54,16 @@ impl ToolkitManager {
         Ok(())
     }
 
-    pub fn get_all_tools(&self) -> Vec<Arc<dyn rig::tool::Tool>> {
-        let mut all_tools = Vec::new();
-        for toolkit in self.toolkits.values() {
-            all_tools.extend(toolkit.tools());
-        }
-        all_tools
-    }
-
-    pub fn get_tools_by_names(&self, names: &[String]) -> Vec<Arc<dyn rig::tool::Tool>> {
-        let mut tools = Vec::new();
-        for name in names {
-            if let Some(toolkit) = self.toolkits.get(name) {
-                tools.extend(toolkit.tools());
-            }
-        }
-        tools
-    }
-
     pub fn toolkit_names(&self) -> Vec<String> {
         self.toolkits.keys().cloned().collect()
+    }
+
+    pub fn get_toolkit(&self, name: &str) -> Option<&Box<dyn Toolkit>> {
+        self.toolkits.get(name)
+    }
+
+    pub fn get_toolkit_mut(&mut self, name: &str) -> Option<&mut Box<dyn Toolkit>> {
+        self.toolkits.get_mut(name)
     }
 }
 
